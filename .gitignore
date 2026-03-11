@@ -1,0 +1,14 @@
+# Secrets and local environment
+.env
+
+# Python caches and build artifacts
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Virtual environments
+.venv/
+venv/
+
+# Runtime logs
+route_log.jsonl

@@ -1,0 +1,10 @@
+services:
+  app:
+    build: .
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - CLASSIFIER_MODEL=${CLASSIFIER_MODEL:-gpt-4o-mini}
+      - GENERATOR_MODEL=${GENERATOR_MODEL:-gpt-4.1-mini}
+      - CONFIDENCE_THRESHOLD=${CONFIDENCE_THRESHOLD:-0.7}
+    stdin_open: true
+    tty: true

@@ -34,14 +34,22 @@ def main() -> None:
         if not message:
             continue
 
-        result = process_message(
-            message,
-            client,
-            classifier_model=classifier_model,
-            generator_model=generator_model,
-            confidence_threshold=confidence_threshold,
-            log_path="route_log.jsonl",
-        )
+        try:
+            result = process_message(
+                message,
+                client,
+                classifier_model=classifier_model,
+                generator_model=generator_model,
+                confidence_threshold=confidence_threshold,
+                log_path="route_log.jsonl",
+            )
+        except Exception as exc:
+            print(f"Request failed: {exc}")
+            if run_mode == "openai":
+                print("Check your OpenAI quota/billing, then try again.\n")
+            else:
+                print("Local fallback mode error. Please retry.\n")
+            continue
 
         print(f"intent={result['intent']} confidence={result['confidence']:.2f}")
         print(result["final_response"])

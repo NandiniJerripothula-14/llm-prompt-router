@@ -1,4 +1,4 @@
-"""OpenAI and local fallback client adapters used by router functions."""
+"""Provider clients for OpenAI, Groq, and local fallback mode."""
 
 from __future__ import annotations
 
@@ -24,12 +24,54 @@ def has_real_openai_key(api_key: str | None = None) -> bool:
     return True
 
 
+def has_real_groq_key(api_key: str | None = None) -> bool:
+    """Return True only when a non-placeholder Groq key is available."""
+    resolved = (api_key or os.getenv("GROQ_API_KEY") or "").strip()
+    if not resolved:
+        return False
+
+    placeholder_prefixes = ("your_", "gsk-your", "replace_me")
+    if resolved.lower().startswith(placeholder_prefixes):
+        return False
+
+    return resolved.startswith("gsk_")
+
+
 class OpenAIChatClient:
     def __init__(self, api_key: str | None = None) -> None:
         resolved_key = api_key or os.getenv("OPENAI_API_KEY")
         if not resolved_key:
             raise ValueError("OPENAI_API_KEY is required")
         self.client = OpenAI(api_key=resolved_key)
+
+    def complete(
+        self,
+        *,
+        model: str,
+        system_prompt: str,
+        user_message: str,
+        temperature: float,
+    ) -> str:
+        response = self.client.chat.completions.create(
+            model=model,
+            temperature=temperature,
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_message},
+            ],
+        )
+        return response.choices[0].message.content or ""
+
+
+class GroqChatClient:
+    """Groq Cloud client using OpenAI-compatible chat completions."""
+
+    def __init__(self, api_key: str | None = None) -> None:
+        resolved_key = api_key or os.getenv("GROQ_API_KEY")
+        if not resolved_key:
+            raise ValueError("GROQ_API_KEY is required")
+
+        self.client = OpenAI(api_key=resolved_key, base_url="https://api.groq.com/openai/v1")
 
     def complete(
         self,

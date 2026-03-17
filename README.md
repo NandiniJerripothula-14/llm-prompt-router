@@ -116,6 +116,76 @@ CLI output shows:
 pytest -q
 ```
 
+## Demo Run Order
+
+Use this exact sequence during your video demo:
+
+1. Run tests and show they pass:
+
+```powershell
+pytest -q
+```
+
+1. Set local provider mode:
+
+```powershell
+$env:LLM_PROVIDER="local"
+```
+
+1. Start the app and test 5 prompts:
+
+```powershell
+python main.py
+```
+
+Suggested 5 prompts:
+
+1. `how do i sort a list of objects in python?`
+1. `what is a pivot table and when should i use it?`
+1. `My boss says my writing is too verbose.`
+1. `I'm preparing for a job interview, any tips?`
+1. `hey`
+
+1. Show latest logs:
+
+```powershell
+Get-Content route_log.jsonl -Tail 8
+```
+
+## Demo Test Prompts
+
+Use these prompts during a live demo to show each route:
+
+1. `how do i sort a list of objects in python?`
+1. `fxi thsi bug pls: for i in range(10) print(i)`
+1. `explain this sql query: select * from users where created_at > now() - interval '7 day'`
+1. `what's the average of these numbers: 12, 45, 23, 67, 34`
+1. `what is a pivot table and when should i use it?`
+1. `This paragraph sounds awkward, can you help me fix it?`
+1. `My boss says my writing is too verbose.`
+1. `Rewrite this sentence to be more professional: "i need this done asap"`
+1. `I'm preparing for a job interview, any tips?`
+1. `How do I structure a cover letter?`
+1. `I'm not sure what to do with my career.`
+1. `Help me make this better.`
+1. `hey`
+1. `Can you write me a poem about clouds?`
+1. `I need to write a function that takes a user id and returns their profile, but also i need help with my resume.`
+
+Short demo set (fast 5-prompt run):
+
+1. `how do i sort a list of objects in python?`
+1. `what is a pivot table and when should i use it?`
+1. `My boss says my writing is too verbose.`
+1. `I'm preparing for a job interview, any tips?`
+1. `hey`
+
+Show latest route logs after the run:
+
+```powershell
+Get-Content route_log.jsonl -Tail 10
+```
+
 ## Requirement Mapping
 
 1. At least four prompts in configurable structure:
